@@ -135,7 +135,7 @@ function clearTextFields() {
 
 /** validator for customer id txt  */
 validator(
-    '#cusIdTxt', /^(C-0)[0-9]{1,4}$/,
+    '#cusIdTxt', /^(C00-00)[0-9]{1,4}$/,
     "Your input can't be validated, Ex - C-001",
     '#customerIdLbl', '#cusNameTxt'
 )

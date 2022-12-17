@@ -15,6 +15,7 @@ loadAllCustomersToCombo();
 
 function loadAllCustomersToCombo() {
     $('#orderCustomerID').empty();
+
     $.ajax({
         url: baseURL + "customer",
         method: "GET",
@@ -30,21 +31,28 @@ function loadAllCustomersToCombo() {
         }
     });
 }
-//
-// /** combo operation on oder id */
-// $('#orderCustomerID').on('click', function () {
-//     let customerID = $('#orderCustomerID').val();
-// $.ajax({
-//     success:function (res) {
-//         for (let i = 0; i < res.length; i++) {
-//             if (customerDetails[i].id === customerID) {
-//                 $("#selectCusName").val(customerDetails[i].name);
-//                 $("#orderCustomerContact").val(customerDetails[i].address);
-//                 $("#orderCustomerAddress").val(customerDetails[i].contact);
-//             }
-//         }
-//     }
-// });
+
+/** combo operation on oder id */
+
+$('#orderCustomerID').on('click', function () {
+    let customerID = $('#orderCustomerID').val();
+    $.ajax({
+        url: baseURL + "customer",
+        method: "GET",
+        dataType: "json",
+        success: function (res) {
+            for (let customer of res.data) {
+                if (customer.id === customerID) {
+                    $("#selectCusName").val(customer.name);
+                    $("#orderCustomerContact").val(customer.address);
+                    $("#orderCustomerAddress").val(customer.contact);
+                }
+            }
+        }
+    });
+});
+
+
 //
 //
 //
