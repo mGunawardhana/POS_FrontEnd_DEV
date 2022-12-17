@@ -8,6 +8,9 @@ package servlet;
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
 
+import dto.CustomerDTO;
+import util.CrudUtil;
+
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 
 @WebServlet(urlPatterns = "/customer")
@@ -26,14 +30,15 @@ public class CustomerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        ArrayList<CustomerDTO> obList = new ArrayList<>();
+        JsonArrayBuilder allCustomers = Json.createArrayBuilder();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
             PreparedStatement preparedStatement = connection.prepareStatement("select * from customer");
             ResultSet rst = preparedStatement.executeQuery();
 
-            JsonArrayBuilder allCustomers = Json.createArrayBuilder();
+//            JsonArrayBuilder allCustomers = Json.createArrayBuilder();
 
             while (rst.next()) {
                 JsonObjectBuilder customer = Json.createObjectBuilder();
@@ -44,6 +49,12 @@ public class CustomerServlet extends HttpServlet {
                 customer.add("contact", rst.getString("contact"));
                 allCustomers.add(customer.build());
 
+                obList.add(new CustomerDTO(
+                        rst.getString(1),
+                        rst.getString(2),
+                        rst.getString(3),
+                        rst.getString(4)
+                ));
             }
             resp.addHeader("Content-Type", "application/json");
             resp.addHeader("Access-Control-Allow-Origin", "*");
