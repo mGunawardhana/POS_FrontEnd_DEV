@@ -132,6 +132,12 @@ function clearTextFields() {
     $('#srcItemID').val('');
 }
 
+/** disabling tab press */
+$('#ItemNameTxt,#itemIdTxt,#itemQtyTxt,#unitPriceTxt').on('keydown', function (e) {
+    if (e.key === "Tab") {
+        e.preventDefault();
+    }
+});
 
 /** validator for customer id txt  */
 validator(

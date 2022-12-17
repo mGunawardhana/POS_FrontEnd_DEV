@@ -129,3 +129,35 @@ function clearItemTextFields() {
     $('#itemQtyTxt').val('');
     $('#unitPriceTxt').val('');
 }
+
+
+/** disabling tab press */
+$('#ItemNameTxt,#itemIdTxt,#itemQtyTxt,#unitPriceTxt').on('keydown', function (e) {
+    if (e.key === "Tab") {
+        e.preventDefault();
+    }
+})
+
+/** validator for item id txt   */
+validator('#itemIdTxt', /^I-[0-9]{1,5}$/,
+    "Your input can't be validated, Ex - I-001",
+    '#itemIdTxtLbl', '#ItemNameTxt'
+);
+
+/** validator for item name txt  */
+validator('#ItemNameTxt', /^[A-z]{2,10}$/,
+    "Your input can't be validated, Ex - Burger",
+    '#itemNameTxtLbl', '#itemQtyTxt'
+);
+
+/** validator for item Qty txt  */
+validator('#itemQtyTxt', /^[0-9]{1,4}$/,
+    "Your input can't be validated, 10 ",
+    '#itemQtyTxtLbl', '#unitPriceTxt'
+);
+
+/** validator for item unit price txt  */
+validator('#unitPriceTxt', /^([0-9]{2,6}.[0-9]{1,2})$/,
+    "Your input can't be validated, Ex - 120.99",
+    '#itemUnitPriceTxtLbl', '#ItemNameTxt'
+);

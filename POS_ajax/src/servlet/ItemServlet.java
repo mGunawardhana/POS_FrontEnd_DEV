@@ -1,9 +1,12 @@
-/*
- * Developed by - mGunawardhana
- * Contact email - mrgunawardhana27368@gmail.com
- * what's app - 071 - 9043372
- */
+
 package servlet;
+
+/**
+ * CopyWriteOwner - mr.Gunawardhana
+ * Contact - 071 - 733 1792
+ *
+ * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
+ */
 
 import javax.json.*;
 import javax.servlet.ServletException;
