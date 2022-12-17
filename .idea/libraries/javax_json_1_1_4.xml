@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="javax.json-1.1.4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/POS_ajax/lib/javax.json-1.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/POS_ajax/lib/javax.json-api-1.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/POS_ajax/lib/mysql-connector-j-8.0.31.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
