@@ -10,30 +10,29 @@ getAllItems();
 $("#addItemBtn").on('click', function () {
     let formData = $("#itemFormController").serialize();
     $.ajax({
-        url:baseURL+ "item",
+        url: baseURL + "item",
         method: "post",
         data: formData,
-        dataType:"json",
+        dataType: "json",
         success: function (res) {
             getAllItems();
             alert(res.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
         }
     });
 });
 
 /** delete item option */
-$("#deleteItemBtn").on('click',function () {
-    let itemId = $("#srcItemID").val();
+$("#deleteItemBtn").on('click', function () {
     $.ajax({
-        url:baseURL+ "item?itemId=" + itemId,
+        url: baseURL + "item",
         method: "delete",
-        dataType:"json",
+        dataType: "json",
         success: function (resp) {
             getAllItems();
             alert(resp.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
 
         }
@@ -50,19 +49,23 @@ $("#updateItemBtn").on('click', function () {
     let unitPrice = $('#unitPriceTxt').val();
 
     var itemObject = {
-        itemId:itemId,
-        itemName:itemName,
-        qty:itemQty,
-        unitPrice:unitPrice
+        itemId: itemId,
+        itemName: itemName,
+        qty: itemQty,
+        unitPrice: unitPrice
     };
 
     $.ajax({
-        url:baseURL+ "item",
+        url: baseURL + "item",
         method: "put",
         contentType: "application/json",
         data: JSON.stringify(itemObject),
         success: function (res) {
             getAllItems();
+            alert(res.message);
+            clearItemTextFields()
+        }, error: function (error) {
+            alert(JSON.parse(error.responseText).message);
         }
     });
 });
@@ -71,9 +74,9 @@ $("#updateItemBtn").on('click', function () {
 function getAllItems() {
     $("#itemTblBody").empty();
     $.ajax({
-        url:baseURL+ "item",
+        url: baseURL + "item",
         success: function (res) {
-            for (let i of res) {
+            for (let i of res.data) {
 
                 let Id = i.itemId;
                 let itemName = i.itemName;
@@ -92,6 +95,10 @@ function getAllItems() {
                 $("#itemTblBody").append(row);
             }
             bindRowClickEventsForItems();
+            clearItemTextFields();
+        },error:function (error){
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
         }
     });
 }
@@ -111,3 +118,10 @@ function bindRowClickEventsForItems() {
     });
 }
 
+
+function clearItemTextFields(){
+    $('#itemIdTxt').val('');
+    $('#ItemNameTxt').val('');
+    $('#itemQtyTxt').val('');
+    $('#unitPriceTxt').val('');
+}

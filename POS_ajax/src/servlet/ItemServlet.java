@@ -5,8 +5,6 @@
  */
 package servlet;
 
-import lombok.SneakyThrows;
-
 import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,37 +21,63 @@ public class ItemServlet extends HttpServlet {
      * get all items option successfully implemented using doGet
      */
 
-    @SneakyThrows
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from item");
-        ResultSet rst = preparedStatement.executeQuery();
 
-        JsonArrayBuilder allItems = Json.createArrayBuilder();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from item");
+            ResultSet rst = preparedStatement.executeQuery();
 
-        while (rst.next()) {
+            JsonArrayBuilder allItems = Json.createArrayBuilder();
 
-            JsonObjectBuilder item = Json.createObjectBuilder();
+            while (rst.next()) {
 
-            item.add("itemId", rst.getString("itemId"));
-            item.add("itemName", rst.getString("itemName"));
-            item.add("qty", rst.getString("qty"));
-            item.add("unitPrice", rst.getDouble("unitPrice"));
-            allItems.add(item.build());
+                JsonObjectBuilder item = Json.createObjectBuilder();
+
+                item.add("itemId", rst.getString("itemId"));
+                item.add("itemName", rst.getString("itemName"));
+                item.add("qty", rst.getString("qty"));
+                item.add("unitPrice", rst.getDouble("unitPrice"));
+                allItems.add(item.build());
+
+            }
+
+            resp.addHeader("Content-Type", "application/json");
+            resp.addHeader("Access-Control-Allow-Origin", "*");
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("state", "OK");
+            objectBuilder.add("message", "Successfully loaded ..!");
+            objectBuilder.add("data", allItems.build());
+            resp.getWriter().print(objectBuilder.build());
+
+        } catch (ClassNotFoundException | SQLException e) {
+
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state", "Error");
+            rjo.add("message", e.getLocalizedMessage());
+            rjo.add("data", "");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(rjo.build());
 
         }
-        resp.addHeader("Content-Type", "application/json");
-        resp.getWriter().print(allItems.build());
+
+
     }
 
     /* update item option */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject item = reader.readObject();
+
         try {
-            JsonReader reader = Json.createReader(req.getReader());
-            JsonObject item = reader.readObject();
+
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
@@ -71,10 +95,11 @@ public class ItemServlet extends HttpServlet {
                 responseObject.add("data", "");
                 resp.getWriter().print(responseObject.build());
             } else {
-                throw new RuntimeException("Illegal id caught please check and re enter !");
+
+                throw new RuntimeException("Wrong ID, Please Check The ID..!");
             }
 
-        } catch (ClassNotFoundException e) {
+        } catch (RuntimeException e) {
 
             JsonObjectBuilder error_for_item_update = Json.createObjectBuilder();
             error_for_item_update.add("state", "Error");
@@ -83,7 +108,7 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().print(error_for_item_update.build());
 
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
 
             JsonObjectBuilder error_for_item_update = Json.createObjectBuilder();
             error_for_item_update.add("state", "Error");
@@ -99,6 +124,7 @@ public class ItemServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -147,6 +173,8 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
@@ -161,7 +189,7 @@ public class ItemServlet extends HttpServlet {
                 repObj.add("data", "");
                 resp.getWriter().print(repObj.build());
             } else {
-                throw new RuntimeException("Thee is no such item for that ID ");
+                throw new RuntimeException("There is no such item for that ID ");
             }
 
         } catch (RuntimeException e) {
@@ -183,6 +211,14 @@ public class ItemServlet extends HttpServlet {
             resp.getWriter().print(repObj.build());
 
         }
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "DELETE,PUT");
+        resp.addHeader("Access-Control-Allow-Headers", "Content-Type");
+
     }
 }
 

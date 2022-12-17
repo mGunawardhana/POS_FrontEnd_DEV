@@ -5,7 +5,6 @@
  */
 
 let baseURL = "http://localhost:8080/dev90/";
-
 getAllCustomers();
 
 /** save customer option */

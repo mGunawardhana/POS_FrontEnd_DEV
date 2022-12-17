@@ -220,7 +220,6 @@ public class CustomerServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Methods", "DELETE,PUT");
         resp.addHeader("Access-Control-Allow-Headers", "Content-Type");
 
-
     }
 }
 
