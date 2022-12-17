@@ -53,6 +53,7 @@ public class CustomerServlet extends HttpServlet {
             resp.getWriter().print(objectBuilder.build());
 
         } catch (ClassNotFoundException | SQLException e) {
+
             JsonObjectBuilder rjo = Json.createObjectBuilder();
             rjo.add("state", "Error");
             rjo.add("message", e.getLocalizedMessage());

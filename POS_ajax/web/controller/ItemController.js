@@ -13,27 +13,27 @@ $("#addItemBtn").on('click', function () {
         url: "item",
         method: "post",
         data: formData,
-        dataType:"json",
+        dataType: "json",
         success: function (res) {
             getAllItems();
             alert(res.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
         }
     });
 });
 
 /** delete item option */
-$("#deleteItemBtn").on('click',function () {
+$("#deleteItemBtn").on('click', function () {
     let itemId = $("#srcItemID").val();
     $.ajax({
         url: "item?itemId=" + itemId,
         method: "delete",
-        dataType:"json",
+        dataType: "json",
         success: function (resp) {
             getAllItems();
             alert(resp.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
 
         }
@@ -50,10 +50,10 @@ $("#updateItemBtn").on('click', function () {
     let unitPrice = $('#unitPriceTxt').val();
 
     var itemObject = {
-        itemId:itemId,
-        itemName:itemName,
-        qty:itemQty,
-        unitPrice:unitPrice
+        itemId: itemId,
+        itemName: itemName,
+        qty: itemQty,
+        unitPrice: unitPrice
     };
 
     $.ajax({
@@ -61,8 +61,12 @@ $("#updateItemBtn").on('click', function () {
         method: "put",
         contentType: "application/json",
         data: JSON.stringify(itemObject),
+        dataType:"json",
         success: function (res) {
             getAllItems();
+            alert(res.message);
+        }, error: function (error) {
+            alert(JSON.parse(error.responseText).message);
         }
     });
 });
@@ -73,7 +77,7 @@ function getAllItems() {
     $.ajax({
         url: "item",
         success: function (res) {
-            for (let i of res) {
+            for (let i of res.data) {
 
                 let Id = i.itemId;
                 let itemName = i.itemName;
@@ -92,6 +96,10 @@ function getAllItems() {
                 $("#itemTblBody").append(row);
             }
             bindRowClickEventsForItems();
+            clearTextFields();
+        }, error: function (error) {
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
         }
     });
 }
