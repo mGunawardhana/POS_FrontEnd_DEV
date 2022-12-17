@@ -8,6 +8,10 @@ getAllItems();
 
 /** save item option */
 $("#addItemBtn").on('click', function () {
+    saveItem();
+});
+
+function saveItem() {
     let formData = $("#itemFormController").serialize();
     $.ajax({
         url: baseURL + "item",
@@ -21,7 +25,7 @@ $("#addItemBtn").on('click', function () {
             alert(JSON.parse(error.responseText).message);
         }
     });
-});
+}
 
 /** delete item option */
 $("#deleteItemBtn").on('click', function () {
@@ -96,7 +100,7 @@ function getAllItems() {
             }
             bindRowClickEventsForItems();
             clearItemTextFields();
-        },error:function (error){
+        }, error: function (error) {
             let message = JSON.parse(error.responseText).message;
             alert(message);
         }
@@ -119,7 +123,7 @@ function bindRowClickEventsForItems() {
 }
 
 
-function clearItemTextFields(){
+function clearItemTextFields() {
     $('#itemIdTxt').val('');
     $('#ItemNameTxt').val('');
     $('#itemQtyTxt').val('');

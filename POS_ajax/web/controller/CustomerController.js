@@ -8,20 +8,24 @@ getAllCustomers();
 
 /** save customer option */
 $("#addCustomerBtn").on('click', function () {
+    saveCustomer();
+});
+
+function saveCustomer() {
     let formData = $("#customerFormController").serialize();
     $.ajax({
         url: "customer",
         method: "post",
         data: formData,
-        dataType:"json",
+        dataType: "json",
         success: function (res) {
             getAllCustomers();
-              alert(res.message);
-        },error:function (error){
-              alert(JSON.parse(error.responseText).message);
+            alert(res.message);
+        }, error: function (error) {
+            alert(JSON.parse(error.responseText).message);
         }
     });
-});
+}
 
 /** delete customer option */
 $("#deleteCustomerBtn").on('click', function () {
@@ -29,11 +33,11 @@ $("#deleteCustomerBtn").on('click', function () {
     $.ajax({
         url: "customer?id=" + id,
         method: "delete",
-        dataType:"json",
+        dataType: "json",
         success: function (resp) {
             getAllCustomers();
             alert(resp.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
         }
     });
@@ -42,17 +46,17 @@ $("#deleteCustomerBtn").on('click', function () {
 /** update customer option */
 $("#updateCustomerBtn").on('click', function () {
 
-    let cusId  = $('#cusIdTxt').val();
-    let cusName  = $('#cusNameTxt').val();
-    let cusAddress  =  $('#cusAddressTxt').val();
-    let cusContact  =  $('#cusContactTxt').val();
+    let cusId = $('#cusIdTxt').val();
+    let cusName = $('#cusNameTxt').val();
+    let cusAddress = $('#cusAddressTxt').val();
+    let cusContact = $('#cusContactTxt').val();
 
 
     var customerObj = {
         id: cusId,
         name: cusName,
-        address:cusAddress,
-        contact:cusContact
+        address: cusAddress,
+        contact: cusContact
     }
 
 
@@ -61,11 +65,11 @@ $("#updateCustomerBtn").on('click', function () {
         method: "put",
         contentType: "application/json",
         data: JSON.stringify(customerObj),
-        dataType:"json",
+        dataType: "json",
         success: function (res) {
             getAllCustomers();
             alert(res.message);
-        },error:function (error){
+        }, error: function (error) {
             alert(JSON.parse(error.responseText).message);
         }
     });
@@ -96,7 +100,7 @@ function getAllCustomers() {
             }
             bindRowClickEvents();
             clearTextFields();
-        },error:function (error){
+        }, error: function (error) {
             let message = JSON.parse(error.responseText).message;
             alert(message);
         }
@@ -127,3 +131,32 @@ function clearTextFields() {
     $('#cusContactTxt').val('');
     $('#srcItemID').val('');
 }
+
+
+/** validator for customer id txt  */
+validator(
+    '#cusIdTxt', /^(C-0)[0-9]{1,4}$/,
+    "Your input can't be validated, Ex - C-001",
+    '#customerIdLbl', '#cusNameTxt'
+);
+
+/** validator for customer name txt  */
+validator(
+    '#cusNameTxt', /^[A-z]{3,30}$/,
+    "Your input can't be validated, Ex - mr.Gunawardhana",
+    '#customerNameLbl', '#cusAddressTxt'
+);
+
+/** validator for customer address txt  */
+validator(
+    '#cusAddressTxt', /^[A-z]{3,30}$/,
+    "Your input can't be validated, Ex - Galle ",
+    '#customerAddressLbl', '#cusContactTxt'
+);
+
+/** validator for customer contact txt  */
+validator(
+    '#cusContactTxt', /^(07([1245678])|091)(-)[0-9]{7}$/,
+    "Your input can't be validated, Ex - 0719028827",
+    '#CustomerContactLbl', '#cusNameTxt'
+);

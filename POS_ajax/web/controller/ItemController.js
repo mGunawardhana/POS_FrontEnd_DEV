@@ -8,6 +8,10 @@ getAllItems();
 
 /** save item option */
 $("#addItemBtn").on('click', function () {
+    saveItem();
+});
+
+function saveItem() {
     let formData = $("#itemFormController").serialize();
     $.ajax({
         url: "item",
@@ -21,7 +25,7 @@ $("#addItemBtn").on('click', function () {
             alert(JSON.parse(error.responseText).message);
         }
     });
-});
+}
 
 /** delete item option */
 $("#deleteItemBtn").on('click', function () {
@@ -61,7 +65,7 @@ $("#updateItemBtn").on('click', function () {
         method: "put",
         contentType: "application/json",
         data: JSON.stringify(itemObject),
-        dataType:"json",
+        dataType: "json",
         success: function (res) {
             getAllItems();
             alert(res.message);
