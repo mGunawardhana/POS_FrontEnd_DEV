@@ -17,9 +17,6 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/orderDetails")
 public class OrderDetailsServlet extends HttpServlet {
 
-    //TODO 2.15.28
-
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
