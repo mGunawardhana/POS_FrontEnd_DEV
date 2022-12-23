@@ -4,5 +4,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="commons-dbcp2-2.9.0" level="project" />
   </component>
 </module>

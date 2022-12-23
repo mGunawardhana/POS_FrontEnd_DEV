@@ -3,7 +3,7 @@
  * Contact email - mrgunawardhana27368@gmail.com
  * what's app - 071 - 9043372
  */
-let baseURL = "http://localhost:8080/dev123/";
+let baseURL = "http://localhost:8080/sample001/";
 getAllItems();
 
 /** save item option */
@@ -139,7 +139,7 @@ $('#ItemNameTxt,#itemIdTxt,#itemQtyTxt,#unitPriceTxt').on('keydown', function (e
 })
 
 /** validator for item id txt   */
-validator('#itemIdTxt', /^I-[0-9]{1,5}$/,
+validator('#itemIdTxt', /^I00-0[0-9]{1,5}$/,
     "Your input can't be validated, Ex - I-001",
     '#itemIdTxtLbl', '#ItemNameTxt'
 );

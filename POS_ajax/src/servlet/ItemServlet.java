@@ -1,12 +1,13 @@
-
 package servlet;
 
 /**
  * CopyWriteOwner - mr.Gunawardhana
  * Contact - 071 - 733 1792
- *
+ * <p>
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
+
+import db.DBConnection;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/item")
 public class ItemServlet extends HttpServlet {
@@ -27,28 +31,23 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from item");
-            ResultSet rst = preparedStatement.executeQuery();
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement pstm = connection.prepareStatement("select * from item");
+            ResultSet rst = pstm.executeQuery();
 
             JsonArrayBuilder allItems = Json.createArrayBuilder();
 
             while (rst.next()) {
-
                 JsonObjectBuilder item = Json.createObjectBuilder();
-
                 item.add("itemId", rst.getString("itemId"));
                 item.add("itemName", rst.getString("itemName"));
                 item.add("qty", rst.getString("qty"));
                 item.add("unitPrice", rst.getDouble("unitPrice"));
                 allItems.add(item.build());
-
             }
 
-
+            connection.close();
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");
@@ -56,15 +55,13 @@ public class ItemServlet extends HttpServlet {
             objectBuilder.add("data", allItems.build());
             resp.getWriter().print(objectBuilder.build());
 
-        } catch (ClassNotFoundException | SQLException e) {
-
+        } catch (SQLException e) {
             JsonObjectBuilder rjo = Json.createObjectBuilder();
             rjo.add("state", "Error");
             rjo.add("message", e.getLocalizedMessage());
             rjo.add("data", "");
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().print(rjo.build());
-
         }
 
 
@@ -76,13 +73,10 @@ public class ItemServlet extends HttpServlet {
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject item = reader.readObject();
-
         try {
-
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
+            Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE item SET itemName= ? , qty=? , unitPrice=? WHERE itemId=?");
+            ResultSet rst = pstm.executeQuery();
 
             pstm.setObject(4, item.getString("itemId"));
             pstm.setObject(1, item.getString("itemName"));
@@ -95,13 +89,14 @@ public class ItemServlet extends HttpServlet {
                 responseObject.add("message", "Successfully Updated !");
                 responseObject.add("data", "");
                 resp.getWriter().print(responseObject.build());
-            } else {
 
+            } else {
                 throw new RuntimeException("Wrong ID, Please Check The ID..!");
             }
 
-        } catch (RuntimeException e) {
+            connection.close();
 
+        } catch (RuntimeException e) {
             JsonObjectBuilder error_for_item_update = Json.createObjectBuilder();
             error_for_item_update.add("state", "Error");
             error_for_item_update.add("message", e.getLocalizedMessage());
@@ -109,8 +104,7 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().print(error_for_item_update.build());
 
-        } catch (ClassNotFoundException | SQLException e) {
-
+        } catch (SQLException e) {
             JsonObjectBuilder error_for_item_update = Json.createObjectBuilder();
             error_for_item_update.add("state", "Error");
             error_for_item_update.add("message", e.getLocalizedMessage());
@@ -127,8 +121,7 @@ public class ItemServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
+            Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement p_statement = connection.prepareStatement("insert into item values(?,?,?,?)");
 
             p_statement.setObject(1, req.getParameter("itemId"));
@@ -137,26 +130,16 @@ public class ItemServlet extends HttpServlet {
             p_statement.setObject(4, req.getParameter("unitPrice"));
 
             if (p_statement.executeUpdate() > 0) {
-
                 JsonObjectBuilder responseObject = Json.createObjectBuilder();
                 responseObject.add("state", "OK");
                 responseObject.add("message", "Successfully Added !");
                 responseObject.add("data", "");
                 resp.getWriter().print(responseObject.build());
-
             }
 
-        } catch (ClassNotFoundException e) {
-
-            JsonObjectBuilder error_for_item = Json.createObjectBuilder();
-            error_for_item.add("state", "Error");
-            error_for_item.add("message", e.getLocalizedMessage());
-            error_for_item.add("data", "");
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().print(error_for_item.build());
+            connection.close();
 
         } catch (SQLException e) {
-
             JsonObjectBuilder error_for_item = Json.createObjectBuilder();
             error_for_item.add("state", "Error");
             error_for_item.add("message", e.getLocalizedMessage());
@@ -172,13 +155,9 @@ public class ItemServlet extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "1234");
+            Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE itemId=?");
-            pstm.setObject(1, req.getParameter("itemId"));
             System.out.println(req.getParameter("itemId"));
 
             if (pstm.executeUpdate() > 0) {
@@ -191,8 +170,9 @@ public class ItemServlet extends HttpServlet {
                 throw new RuntimeException("There is no such item for that ID ");
             }
 
-        } catch (RuntimeException e) {
+            connection.close();
 
+        } catch (RuntimeException e) {
             JsonObjectBuilder repObj = Json.createObjectBuilder();
             repObj.add("state", "Error");
             repObj.add("message", e.getLocalizedMessage());
@@ -200,15 +180,13 @@ public class ItemServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().print(repObj.build());
 
-        } catch (ClassNotFoundException | SQLException e) {
-
+        } catch (SQLException e) {
             JsonObjectBuilder repObj = Json.createObjectBuilder();
             repObj.add("state", "Error");
             repObj.add("message", e.getLocalizedMessage());
             repObj.add("data", "");
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().print(repObj.build());
-
         }
     }
 }

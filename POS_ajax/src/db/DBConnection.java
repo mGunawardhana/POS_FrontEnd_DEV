@@ -6,23 +6,35 @@
 
 package db;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
     private static DBConnection dbConnection;
-    private final Connection connection;
+    BasicDataSource bds;
 
-    private DBConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/company", "root", "1234");
+    private DBConnection() {
+        bds = new BasicDataSource();
+        bds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        bds.setUrl("jdbc:mysql://localhost:3306/company");
+        bds.setPassword("1234");
+        bds.setUsername("root");
+        bds.setMaxTotal(2);
+        bds.setInitialSize(2);
+
     }
 
-    public static DBConnection getInstance() throws SQLException, ClassNotFoundException {
-        return (null == dbConnection) ? new DBConnection() : dbConnection;
+    public static DBConnection getDbConnection() {
+        if (dbConnection == null) {
+            dbConnection = new DBConnection();
+        }
+        return dbConnection;
     }
-    public Connection getConnection() {
-        return connection;
+
+    public Connection getConnection() throws SQLException {
+        return bds.getConnection();
     }
 }
