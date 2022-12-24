@@ -31,8 +31,7 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("select * from item");
             ResultSet rst = pstm.executeQuery();
 
@@ -46,8 +45,6 @@ public class ItemServlet extends HttpServlet {
                 item.add("unitPrice", rst.getDouble("unitPrice"));
                 allItems.add(item.build());
             }
-
-            connection.close();
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");
@@ -73,10 +70,9 @@ public class ItemServlet extends HttpServlet {
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject item = reader.readObject();
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("UPDATE item SET itemName= ? , qty=? , unitPrice=? WHERE itemId=?");
-            ResultSet rst = pstm.executeQuery();
 
             pstm.setObject(4, item.getString("itemId"));
             pstm.setObject(1, item.getString("itemName"));
@@ -93,8 +89,6 @@ public class ItemServlet extends HttpServlet {
             } else {
                 throw new RuntimeException("Wrong ID, Please Check The ID..!");
             }
-
-            connection.close();
 
         } catch (RuntimeException e) {
             JsonObjectBuilder error_for_item_update = Json.createObjectBuilder();
@@ -120,8 +114,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement p_statement = connection.prepareStatement("insert into item values(?,?,?,?)");
 
             p_statement.setObject(1, req.getParameter("itemId"));
@@ -136,8 +129,6 @@ public class ItemServlet extends HttpServlet {
                 responseObject.add("data", "");
                 resp.getWriter().print(responseObject.build());
             }
-
-            connection.close();
 
         } catch (SQLException e) {
             JsonObjectBuilder error_for_item = Json.createObjectBuilder();
@@ -155,8 +146,7 @@ public class ItemServlet extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE itemId=?");
             System.out.println(req.getParameter("itemId"));
 

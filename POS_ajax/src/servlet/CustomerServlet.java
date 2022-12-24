@@ -30,8 +30,7 @@ public class CustomerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("select * from customer");
             ResultSet rst = pstm.executeQuery();
 
@@ -46,7 +45,7 @@ public class CustomerServlet extends HttpServlet {
                 allCustomers.add(customer.build());
 
             }
-            connection.close();
+
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");
             objectBuilder.add("message", "Successfully loaded ..!");
@@ -69,9 +68,7 @@ public class CustomerServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?,?)");
 
             pstm.setObject(1, req.getParameter("id"));
@@ -106,8 +103,8 @@ public class CustomerServlet extends HttpServlet {
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
 
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
+
             PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name= ? , address=? , contact=? WHERE id=?");
 
             pstm.setObject(4, customer.getString("id"));
@@ -126,7 +123,6 @@ public class CustomerServlet extends HttpServlet {
                 throw new RuntimeException("Wrong ID, Please Check The ID..!");
             }
 
-            connection.close();
 
         } catch (RuntimeException e) {
             JsonObjectBuilder rjo = Json.createObjectBuilder();
@@ -152,8 +148,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
+        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("delete from customer where id=?");
 
             pstm.setObject(1, req.getParameter("id"));
@@ -168,7 +163,6 @@ public class CustomerServlet extends HttpServlet {
             } else {
                 throw new RuntimeException("There is no such customer for that ID");
             }
-            connection.close();
 
         } catch (RuntimeException e) {
             JsonObjectBuilder rjo = Json.createObjectBuilder();
