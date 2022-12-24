@@ -3,11 +3,11 @@ package servlet;
 /**
  * CopyWriteOwner - mr.Gunawardhana
  * Contact - 071 - 733 1792
- * <p>
+ *
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
 
-import db.DBConnection;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("select * from item");
             ResultSet rst = pstm.executeQuery();
 
@@ -71,7 +71,7 @@ public class ItemServlet extends HttpServlet {
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject item = reader.readObject();
 
-        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("UPDATE item SET itemName= ? , qty=? , unitPrice=? WHERE itemId=?");
 
             pstm.setObject(4, item.getString("itemId"));
@@ -114,7 +114,7 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement p_statement = connection.prepareStatement("insert into item values(?,?,?,?)");
 
             p_statement.setObject(1, req.getParameter("itemId"));
@@ -146,7 +146,8 @@ public class ItemServlet extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (Connection connection = DBConnection.getDbConnection().getConnection()) {
+
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE itemId=?");
             System.out.println(req.getParameter("itemId"));
 
@@ -159,8 +160,6 @@ public class ItemServlet extends HttpServlet {
             } else {
                 throw new RuntimeException("There is no such item for that ID ");
             }
-
-            connection.close();
 
         } catch (RuntimeException e) {
             JsonObjectBuilder repObj = Json.createObjectBuilder();

@@ -7,12 +7,10 @@ package servlet;
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
 
-import db.DBConnection;
 import lombok.SneakyThrows;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,9 +33,8 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ServletContext servletContext = getServletContext();
 
-        try (Connection connection = ((BasicDataSource) servletContext.getAttribute("dbcp")).getConnection()) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("select * from customer");
             ResultSet rst = pstm.executeQuery();
 
@@ -77,7 +74,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("insert into customer values(?,?,?,?)");
 
             pstm.setObject(1, req.getParameter("id"));
@@ -111,7 +108,7 @@ public class CustomerServlet extends HttpServlet {
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
 
-        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
 
             PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name= ? , address=? , contact=? WHERE id=?");
 
@@ -156,7 +153,7 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();) {
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
             PreparedStatement pstm = connection.prepareStatement("delete from customer where id=?");
 
             pstm.setObject(1, req.getParameter("id"));
