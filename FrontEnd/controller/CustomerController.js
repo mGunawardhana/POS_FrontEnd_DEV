@@ -4,7 +4,7 @@
  * what's app - 071 - 9043372
  */
 
-let baseURL = "http://localhost:8080/apple/";
+let baseURL = "http://localhost:8080/deployApp/";
 
 getAllCustomers();
 
