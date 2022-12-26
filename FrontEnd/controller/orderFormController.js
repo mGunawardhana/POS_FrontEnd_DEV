@@ -7,6 +7,15 @@
  */
 let baseURL = "http://localhost:8080/deployApp/";
 
+/** array for storing order details */
+let orderDetails = [];
+
+/** array for storing order details */
+let purchaseDetails = [];
+
+let bool = false;
+let orderAmount = 0;
+
 loadAllCustomersToCombo();
 loadAllItemToCombo();
 
@@ -90,34 +99,87 @@ $('#itemCodeCombo').on('click', function () {
     });
 })
 
+
 /** add to cart option */
+$('#btnAddToTable').on('click', function () {
+    $("#orderTblBody").empty();
+    loadAllOderDetails();
 
+    let tot =parseInt($("#txtItemPrice").val()) * $('#txtQty').val();
 
-$("#btnAddToTable").on("click",function (){
-
-    let itemId = $('#itemCodeCombo').val();
-    let itemName = $('#txtItemDescription').val();
-    let unitPrice = $('#txtItemPrice').val();
-    let itemQty = $('#txtQty').val();
-    let tot = unitPrice * itemQty;
-
-    $("#orderTblBody").append(
-        `<tr>
-            <td>${itemId}</td>
-            <td>${itemName}</td>
-            <td>${unitPrice}</td>
-            <td>${itemQty}</td>
-            <td>${tot}</td>
-        </tr>`
+    let orderArray = new Order(
+        $('#selectItemCode').val(),
+        $("#txtItemDescription").val(),
+        $("#txtItemPrice").val(),
+        $("#txtQty").val(),
+        tot,
+        $('#txtOrderID').val()
     );
 
-    $("#total").val(tot);
+    let qty1;
+    let qty2;
+    let tot1;
+    let tot2;
 
+    for (let i = 0; i < orderDetails.length; i++) {
+        let test = orderDetails[i];
+
+        if ($('#selectItemCode').val() === test.iCode && $('#txtOrderID').val() === test.orderId) {
+            bool = true;
+            qty1 = parseInt(test.Qty);
+            tot1 = parseInt(test.total);
+            qty2 = parseInt($("#txtQty").val());
+            tot2 = tot;
+
+            test.iCode = $("#selectItemCode").val();
+            test.itemName = $("#txtItemDescription").val();
+            test.price = $("#txtItemPrice").val();
+            test.Qty = (qty1 + qty2);
+            test.total = (tot1 + tot2);
+
+            $('#orderTblBody').empty();
+        }
+    }
+
+    if (bool === false) {
+        orderDetails.push(orderArray);
+    }
+
+    loadAllOderDetails();
+
+    let z = $("#txtItemPrice").val() * parseInt($('#txtQty').val());
+
+    let singleOrder = new OrderDetails(
+        $('#txtOrderID').val(),
+        $('#txtDate').val(),
+        $("#orderCustomerID").val(),
+        $("#selectItemCode").val(),
+        $("#txtQty").val(),
+        z,
+        $("#txtDiscount").val()
+    );
+
+    purchaseDetails.push(singleOrder);
+    orderAmount += tot;
 });
 
-$('#btnClear').on('click', function () {
+/** loading all details for cart */
+function loadAllOderDetails() {
 
-});
+    /** removing table row repeating issue */
+    $("#orderTblBody").empty();
 
+    for (let oDetails of orderDetails) {
+        let orderRow = `<tr>
+                        <td>${oDetails.iCode}</td>
+                        <td>${oDetails.itemName}</td>
+                        <td>${oDetails.price}</td>
+                        <td>${oDetails.Qty}</td>
+                        <td>${oDetails.total}</td>
+                   </tr>`;
+        $('#orderTblBody').append(orderRow);
+        bool = false;
+    }
+}
 
 
