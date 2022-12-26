@@ -99,13 +99,12 @@ $('#itemCodeCombo').on('click', function () {
     });
 })
 
-
 /** add to cart option */
 $('#btnAddToTable').on('click', function () {
     $("#orderTblBody").empty();
     loadAllOderDetails();
 
-    let tot =parseInt($("#txtItemPrice").val()) * $('#txtQty').val();
+    let tot = parseInt($("#txtItemPrice").val()) * $('#txtQty').val();
 
     let orderArray = new Order(
         $('#selectItemCode').val(),
@@ -120,6 +119,7 @@ $('#btnAddToTable').on('click', function () {
     let qty2;
     let tot1;
     let tot2;
+    let setAmount = 0;
 
     for (let i = 0; i < orderDetails.length; i++) {
         let test = orderDetails[i];
@@ -138,6 +138,8 @@ $('#btnAddToTable').on('click', function () {
             test.total = (tot1 + tot2);
 
             $('#orderTblBody').empty();
+
+            $('#total').val();//TODO set up total value here
         }
     }
 
@@ -181,5 +183,56 @@ function loadAllOderDetails() {
         bool = false;
     }
 }
+
+$("#btnSubmitOrder").on('click', function () {
+    let order_id = $('#txtOrderID').val();
+    let order_date = $('#txtDate').val();
+    let customer_id = $('#orderCustomerID').val();
+    let item_code = $('#itemCodeCombo').val();
+    let order_qty = $('#txtQty').val();
+    let discount = $('#txtDiscount').val();
+    let total = $('#subtotal').val();
+
+    let ob = {
+        order_id: order_id,
+        order_date: order_date,
+        customer_id: customer_id,
+        discount: discount
+    }
+
+    array.push({code:itCode,name:itName,price:Price,quantity:Quantity,total:total});
+
+
+    $.ajax({
+        url: baseURL + "purchase",
+        method: "post",
+        dataType: "json",
+        data: JSON.stringify(ob),
+        contentType: "application/json",
+        success: function (resp) {
+            alert(resp.message);
+        },
+        error: function (error) {
+            alert(JSON.parse(error.responseText).message);
+        }
+    });
+
+});
+
+function getItemDetails() {
+    let rows = $("#orderTblBody").children().length;
+    var array = [];
+    for (let i = 0; i < rows; i++) {
+        let itCode = $("#orderTblBody").children().eq(i).children(":eq(0)").text();
+        let itName = $("#orderTblBody").children().eq(i).children(":eq(2)").text();
+        let Price = $("#orderTblBody").children().eq(i).children(":eq(3)").text();
+        let Quantity = $("#orderTblBody").children().eq(i).children(":eq(4)").text();
+        let total = $("#orderTblBody").children().eq(i).children(":eq(5)").text();
+        array.push({code:itCode,name:itName,price:Price,quantity:Quantity,total:total});
+    }
+    return array;
+}
+
+
 
 
