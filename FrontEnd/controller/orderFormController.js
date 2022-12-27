@@ -177,7 +177,7 @@ function loadAllOderDetails() {
                         <td>${oDetails.iCode}</td>
                         <td>${oDetails.itemName}</td>
                         <td>${oDetails.price}</td>
-                        <td>${oDetails.Qty}</td>
+                        <td>${oDetails.Qty}</td> 
                         <td>${oDetails.total}</td>
                    </tr>`;
         $('#orderTblBody').append(orderRow);
@@ -187,6 +187,7 @@ function loadAllOderDetails() {
 
 function getItemDetails() {
     let rows = $("#orderTblBody").children().length;
+
     var array = [];
     for (let i = 0; i < rows; i++) {
         let itCode = $("#orderTblBody").children().eq(i).children(":eq(0)").text();
@@ -194,11 +195,13 @@ function getItemDetails() {
         let Price = $("#orderTblBody").children().eq(i).children(":eq(2)").text();
         let Quantity = $("#orderTblBody").children().eq(i).children(":eq(3)").text();
         let total = $("#orderTblBody").children().eq(i).children(":eq(4)").text();
+        let disc = $('#txtDiscount').val();
         array.push({
             code: itCode,
             name: itName,
             price: Price,
             quantity: Quantity,
+            discount:disc,
             total: total
         });
     }
@@ -214,6 +217,7 @@ $("#btnSubmitOrder").on('click', function () {
     let customer_id = $('#orderCustomerID').val();
     let customer_name = $('#selectCusName').val();
     let customer_contact = $('#orderCustomerContact').val();
+    let discount = $('#txtDiscount').val();
     let cartObj = getItemDetails();
 
 
@@ -223,6 +227,7 @@ $("#btnSubmitOrder").on('click', function () {
         customer_id: customer_id,
         customer_name: customer_name,
         customer_contact: customer_contact,
+        discount:discount,
         fullObj: cartObj
     }
 
@@ -244,7 +249,7 @@ $("#btnSubmitOrder").on('click', function () {
     refresh();
 });
 
-function refresh(){
+function refresh() {
     loadAllOrder();
     location.reload();
 }
@@ -273,6 +278,39 @@ function loadAllOrder() {
                 ;
 
                 $("#tblOrder").append(row);
+            }
+        }, error: function (error) {
+            let message = JSON.parse(error.responseText).message;
+            alert(message);
+        }
+    });
+}
+
+function loadAllOrderDetails() {
+    $("#tblOrderDetails").empty();
+    $.ajax({
+        url: baseURL + "purchace",
+        success: function (res) {
+            for (let c of res.data) {
+
+                let order_id = c.order_id;
+                let code = c.code;
+                let price = c.price;
+                let quantity = c.quantity;
+                let discount = c.discount;
+                let total = c.total;
+
+                let row = "<tr>" +
+                    "<td>" + order_id + "</td>" +
+                    "<td>" + code + "</td>" +
+                    "<td>" + price + "</td>" +
+                    "<td>" + quantity + "</td>" +
+                    "<td>" + discount + "</td>" +
+                    "<td>" + total + "</td>" +
+                    "</tr>"
+                ;
+
+                $("#tblOrderDetails").append(row);
             }
         }, error: function (error) {
             let message = JSON.parse(error.responseText).message;

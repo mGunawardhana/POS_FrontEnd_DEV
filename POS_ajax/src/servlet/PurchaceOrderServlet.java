@@ -119,9 +119,9 @@ public class PurchaceOrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
+
             PreparedStatement pstm = connection.prepareStatement("select * from `orders`");
             ResultSet resultSet = pstm.executeQuery();
-
             JsonArrayBuilder allOrders = Json.createArrayBuilder();
 
             while (resultSet.next()) {
@@ -131,10 +131,28 @@ public class PurchaceOrderServlet extends HttpServlet {
                 Order.add("customer_id", resultSet.getString("customer_id"));
                 Order.add("customer_name", resultSet.getString("customer_name"));
                 Order.add("customer_contact", resultSet.getString("customer_contact"));
-
                 allOrders.add(Order.build());
-
             }
+
+            PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
+            ResultSet resultSet2 = pstm2.executeQuery();
+            JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
+
+            while (resultSet2.next()) {
+
+                JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
+                OrderDetails.add("order_id", resultSet2.getString("order_id"));
+                OrderDetails.add("code", resultSet2.getString("code"));
+                OrderDetails.add("price", resultSet2.getDouble("price"));
+                OrderDetails.add("quantity", resultSet2.getInt("quantity"));
+                OrderDetails.add("discount", resultSet2.getDouble("discount"));
+                OrderDetails.add("total", resultSet2.getDouble("total"));
+
+                allOrdersDetails.add(OrderDetails.build());
+            }
+
+
+
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");
