@@ -261,6 +261,7 @@ function getItemDetails() {
 
 function refresh() {
     loadAllOrder();
+    loadAllOrderDetails();
     location.reload();
 }
 
@@ -305,17 +306,17 @@ function loadAllOrderDetails() {
 
                 let order_id = c.order_id;// TODO check her but no discount detected ..................................
                 let code = c.item_code;
+                let name = c.item_name;
                 let price = c.item_name;
-                let quantity = c.item_price;
-                let discount = c.item_quantity;
+                let quantity = c.item_quantity;
                 let total = c.item_total;
 
                 let row = "<tr>" +
                     "<td>" + order_id + "</td>" +
                     "<td>" + code + "</td>" +
+                    "<td>" + name + "</td>" +
                     "<td>" + price + "</td>" +
                     "<td>" + quantity + "</td>" +
-                    "<td>" + discount + "</td>" +
                     "<td>" + total + "</td>" +
                     "</tr>"
                 ;

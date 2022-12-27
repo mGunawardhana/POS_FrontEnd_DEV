@@ -135,23 +135,6 @@ public class PurchaceOrderServlet extends HttpServlet {
                 allOrders.add(Order.build());
             }
 
-//            PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
-//            ResultSet resultSet2 = pstm2.executeQuery();
-//            JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
-//
-//            while (resultSet2.next()) {
-//
-//                JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
-//                OrderDetails.add("order_id", resultSet2.getString("order_id"));
-//                OrderDetails.add("code", resultSet2.getString("code"));
-//                OrderDetails.add("price", resultSet2.getDouble("price"));
-//                OrderDetails.add("quantity", resultSet2.getInt("quantity"));
-//                OrderDetails.add("discount", resultSet2.getDouble("discount"));
-//                OrderDetails.add("total", resultSet2.getDouble("total"));
-//
-//                allOrdersDetails.add(OrderDetails.build());
-//            }
-
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");
             objectBuilder.add("message", "Successfully loaded ..!");
@@ -167,5 +150,45 @@ public class PurchaceOrderServlet extends HttpServlet {
             resp.getWriter().print(rjo.build());
         }
 
+
+//        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
+//
+//
+//            PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
+//            ResultSet resultSet2 = pstm2.executeQuery();
+//            JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
+//
+//            while (resultSet2.next()) {
+//
+//                JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
+//                OrderDetails.add("order_id", resultSet2.getString("order_id"));
+//                OrderDetails.add("item_code", resultSet2.getString("item_code"));
+//                OrderDetails.add("item_name", resultSet2.getString("item_name"));
+//                OrderDetails.add("item_name", resultSet2.getDouble("item_name"));
+//                OrderDetails.add("item_quantity", resultSet2.getInt("item_quantity"));
+//                OrderDetails.add("item_total", resultSet2.getDouble("item_total"));
+//
+//                allOrdersDetails.add(OrderDetails.build());
+//            }
+//
+//            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+//            objectBuilder.add("state", "OK");
+//            objectBuilder.add("message", "Successfully loaded ..!");
+//            objectBuilder.add("data", allOrdersDetails.build());
+//            resp.getWriter().print(objectBuilder.build());
+//
+//
+//        } catch (SQLException e) {
+//            JsonObjectBuilder rjo = Json.createObjectBuilder();
+//            rjo.add("state", "Error");
+//            rjo.add("message", e.getLocalizedMessage());
+//            rjo.add("data", "");
+//            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//            resp.getWriter().print(rjo.build());
+//        }
+
+
     }
+
+
 }

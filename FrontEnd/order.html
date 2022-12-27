@@ -42,15 +42,15 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link btn btn-dark" id="Customer" href="customer.html">Customers</a>
+                        <a class="nav-link btn btn-dark" href="customer.html" id="Customer">Customers</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link btn btn-dark" id="Item" href="item.html">Items</a>
+                        <a class="nav-link btn btn-dark" href="item.html" id="Item">Items</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link btn btn-dark" id="Order" href="order.html">Orders</a>
+                        <a class="nav-link btn btn-dark" href="order.html" id="Order">Orders</a>
                     </li>
                 </ul>
             </div>
@@ -62,7 +62,7 @@
 
 <!-- orders form -->
 <main>
-    <main class="container-fluid" id="orderForm" >
+    <main class="container-fluid" id="orderForm">
         <div class="container-fluid mt-4">
             <div class="jumbotron pt-4">
                 <div class="row w-100">
@@ -241,8 +241,8 @@
                                         </button>
 
                                         <button class="btn btn-warning col-12 col-sm-auto mt-1 btnBackGround"
-                                                data-bs-target="#myModal" id=""
-                                                data-bs-toggle="modal" type="button">Order Details
+                                                data-bs-target="#myModal" data-bs-toggle="modal"
+                                                id="" type="button">Order Details
                                         </button>
 
 
@@ -373,8 +373,8 @@
                                     class="d-flex flex-column h-100 col-10 col-xl-11 shadow-lg rounded-3 align-items-center pt-3  mb-2 sectionBorder "
                                     style="background: white">
                                 <!-- View Orders Table Start -->
-                                <div class="col-11 justify-content-around " >
-                                    <div class="PlaceOrderTableDiv overflow-auto" >
+                                <div class="col-11 justify-content-around ">
+                                    <div class="PlaceOrderTableDiv overflow-auto">
                                         <table class="table table-success table-striped table-bordered table-hover">
                                             <thead class="text-light table-dark text-center  table-bordered sticky-top">
                                             <tr>
@@ -399,15 +399,15 @@
                                     style="background: white">
                                 <!-- View Order Details Table Start -->
                                 <div class="col-11 justify-content-around ">
-                                    <div class="PlaceOrderTableDiv overflow-auto" >
+                                    <div class="PlaceOrderTableDiv overflow-auto">
                                         <table class="table table-success table-striped table-bordered table-hover">
                                             <thead class="text-light table-dark text-center  table-bordered sticky-top">
                                             <tr>
                                                 <th>Order Id</th>
                                                 <th>Item Code</th>
+                                                <th>Name</th>
                                                 <th>Unit Price</th>
                                                 <th>Qty</th>
-<!--                                                <th>Discount</th>-->
                                                 <th>Total</th>
                                             </tr>
                                             </thead>
