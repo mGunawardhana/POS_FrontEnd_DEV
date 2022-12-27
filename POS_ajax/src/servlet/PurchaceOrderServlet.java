@@ -68,20 +68,21 @@ public class PurchaceOrderServlet extends HttpServlet {
                 for (JsonValue orderDetail : orderDetails) {
                     System.out.println("i m here 06");
 
-                    String item_Code = orderDetail.asJsonObject().getString("code");
-                    String item_Name = orderDetail.asJsonObject().getString("name");
-                    double Price = Double.parseDouble(orderDetail.asJsonObject().getString("price"));
-                    int qty = Integer.parseInt(orderDetail.asJsonObject().getString("quantity"));
-                    double total = Double.parseDouble(orderDetail.asJsonObject().getString("total"));
+
+                    String item_code = orderDetail.asJsonObject().getString("item_code");
+                    String item_name = orderDetail.asJsonObject().getString("item_name");
+                    double item_price = Double.parseDouble(orderDetail.asJsonObject().getString("item_price"));
+                    int item_quantity = Integer.parseInt(orderDetail.asJsonObject().getString("item_quantity"));
+                    double item_total = Double.parseDouble(orderDetail.asJsonObject().getString("item_total"));
 
                     PreparedStatement pstms = connection.prepareStatement("insert into `OrderDetails` values(?,?,?,?,?,?)");
 
                     pstms.setObject(1, order_id);
-                    pstms.setObject(2, item_Code);
-                    pstms.setObject(3, item_Name);
-                    pstms.setObject(4, Price);
-                    pstms.setObject(5, qty);
-                    pstms.setObject(6, total);
+                    pstms.setObject(2, item_code);
+                    pstms.setObject(3, item_name);
+                    pstms.setObject(4, item_price);
+                    pstms.setObject(5, item_quantity);
+                    pstms.setObject(6, item_total);
 
                     if (!(pstms.executeUpdate()>0)) {
                         System.out.println("i m here 07");
@@ -134,25 +135,22 @@ public class PurchaceOrderServlet extends HttpServlet {
                 allOrders.add(Order.build());
             }
 
-            PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
-            ResultSet resultSet2 = pstm2.executeQuery();
-            JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
-
-            while (resultSet2.next()) {
-
-                JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
-                OrderDetails.add("order_id", resultSet2.getString("order_id"));
-                OrderDetails.add("code", resultSet2.getString("code"));
-                OrderDetails.add("price", resultSet2.getDouble("price"));
-                OrderDetails.add("quantity", resultSet2.getInt("quantity"));
-                OrderDetails.add("discount", resultSet2.getDouble("discount"));
-                OrderDetails.add("total", resultSet2.getDouble("total"));
-
-                allOrdersDetails.add(OrderDetails.build());
-            }
-
-
-
+//            PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
+//            ResultSet resultSet2 = pstm2.executeQuery();
+//            JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
+//
+//            while (resultSet2.next()) {
+//
+//                JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
+//                OrderDetails.add("order_id", resultSet2.getString("order_id"));
+//                OrderDetails.add("code", resultSet2.getString("code"));
+//                OrderDetails.add("price", resultSet2.getDouble("price"));
+//                OrderDetails.add("quantity", resultSet2.getInt("quantity"));
+//                OrderDetails.add("discount", resultSet2.getDouble("discount"));
+//                OrderDetails.add("total", resultSet2.getDouble("total"));
+//
+//                allOrdersDetails.add(OrderDetails.build());
+//            }
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("state", "OK");

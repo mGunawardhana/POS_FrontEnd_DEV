@@ -44,11 +44,11 @@ VALUES ('I00-001', 'Kottu', 1000, 110.00),
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders`
 (
-    order_id         VARCHAR(10),
+    order_id         VARCHAR(20),
     order_date       DATE,
-    customer_id      VARCHAR(10),
+    customer_id      VARCHAR(20),
     customer_name    VARCHAR(20),
-    customer_contact VARCHAR(12)
+    customer_contact VARCHAR(15)
 );
 
 SHOW TABLES;
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS `orderDetails`
 (
     order_id VARCHAR(10),
     code     VARCHAR(10),
+    name     VARCHAR(20),
     price    double,
     quantity int,
-    discount     double,
     total    double
 );
 SHOW TABLES;
