@@ -28,7 +28,6 @@ public class PurchaceOrderServlet extends HttpServlet {
 
         System.out.println("i m here 01");
 
-
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
@@ -114,4 +113,6 @@ public class PurchaceOrderServlet extends HttpServlet {
             resp.getWriter().print(error.build());
         }
     }
+
+
 }
