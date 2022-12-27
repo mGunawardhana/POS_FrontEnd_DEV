@@ -196,7 +196,7 @@ function getItemDetails() {
         let total = $("#orderTblBody").children().eq(i).children(":eq(4)").text();
         array.push({
             code: itCode,
-            name:itName,
+            name: itName,
             price: Price,
             quantity: Quantity,
             total: total
@@ -206,6 +206,9 @@ function getItemDetails() {
 }
 
 $("#btnSubmitOrder").on('click', function () {
+
+    loadAllOrder();
+
     let order_id = $('#txtOrderID').val();
     let order_date = $('#txtDate').val();
     let customer_id = $('#orderCustomerID').val();
@@ -218,9 +221,9 @@ $("#btnSubmitOrder").on('click', function () {
         order_id: order_id,
         order_date: order_date,
         customer_id: customer_id,
-        customer_name:customer_name,
-        customer_contact:customer_contact,
-        fullObj:cartObj
+        customer_name: customer_name,
+        customer_contact: customer_contact,
+        fullObj: cartObj
     }
 
 
@@ -238,7 +241,13 @@ $("#btnSubmitOrder").on('click', function () {
         }
     });
 
+    refresh();
 });
+
+function refresh(){
+    loadAllOrder();
+    location.reload();
+}
 
 function loadAllOrder() {
     $("#tblOrder").empty();
@@ -252,7 +261,6 @@ function loadAllOrder() {
                 let customerId = c.customer_id;
                 let customerName = c.customer_name;
                 let customerContact = c.customer_contact;
-
 
 
                 let row = "<tr>" +

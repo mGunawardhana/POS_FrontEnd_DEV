@@ -18,11 +18,10 @@ import lombok.ToString;
 @ToString
 public class OrderDTO {
 
-    private String orderId;
-    private String iCode;
-    private String itemName;
-    private double price;
-    private int Qty;
-    private double total;
+    private String order_id;
+    private String order_date;
+    private String customer_id;
+    private String customer_name;
+    private String customer_contact;
 
 }

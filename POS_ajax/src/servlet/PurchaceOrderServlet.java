@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -114,5 +115,41 @@ public class PurchaceOrderServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
+            PreparedStatement pstm = connection.prepareStatement("select * from `orders`");
+            ResultSet resultSet = pstm.executeQuery();
+
+            JsonArrayBuilder allOrders = Json.createArrayBuilder();
+
+            while (resultSet.next()) {
+                JsonObjectBuilder Order = Json.createObjectBuilder();
+                Order.add("order_id", resultSet.getString("order_id"));
+                Order.add("order_date", resultSet.getString("order_date"));
+                Order.add("customer_id", resultSet.getString("customer_id"));
+                Order.add("customer_name", resultSet.getString("customer_name"));
+                Order.add("customer_contact", resultSet.getString("customer_contact"));
+
+                allOrders.add(Order.build());
+
+            }
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("state", "OK");
+            objectBuilder.add("message", "Successfully loaded ..!");
+            objectBuilder.add("data", allOrders.build());
+            resp.getWriter().print(objectBuilder.build());
+
+        } catch (SQLException e) {
+            JsonObjectBuilder rjo = Json.createObjectBuilder();
+            rjo.add("state", "Error");
+            rjo.add("message", e.getLocalizedMessage());
+            rjo.add("data", "");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().print(rjo.build());
+        }
+
+    }
 }

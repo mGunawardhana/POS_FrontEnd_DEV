@@ -8,7 +8,7 @@ import lombok.ToString;
 /**
  * CopyWriteOwner - mr.Gunawardhana
  * Contact - 071 - 733 1792
- *
+ * <p>
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
 
@@ -18,13 +18,12 @@ import lombok.ToString;
 @ToString
 public class OderDetailsDTO {
 
-private String oID;
-private String date;
-private String cID;
-private String iCode;
-private double oQty;
-private double Tot;
-private double discount;
+    private String order_id;
+    private String code;
+    private String name;
+    private double price;
+    private int quantity;
+    private double total;
 
 }
 
