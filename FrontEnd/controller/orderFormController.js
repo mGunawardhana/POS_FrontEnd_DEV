@@ -5,7 +5,7 @@
  *  * what's app - 071 - 9043372
  *
  */
-let baseURL = "http://localhost:8080/deployApp/";
+let baseURL = "http://localhost:8080/devlopment/";
 
 /** array for storing order details */
 let orderDetails = [];
@@ -184,27 +184,47 @@ function loadAllOderDetails() {
     }
 }
 
+function getItemDetails() {
+    let rows = $("#orderTblBody").children().length;
+    var array = [];
+    for (let i = 0; i < rows; i++) {
+        let itCode = $("#orderTblBody").children().eq(i).children(":eq(0)").text();
+        let itName = $("#orderTblBody").children().eq(i).children(":eq(1)").text();
+        let Price = $("#orderTblBody").children().eq(i).children(":eq(2)").text();
+        let Quantity = $("#orderTblBody").children().eq(i).children(":eq(3)").text();
+        let total = $("#orderTblBody").children().eq(i).children(":eq(4)").text();
+        array.push({
+            code: itCode,
+            name:itName,
+            price: Price,
+            quantity: Quantity,
+            total: total
+        });
+    }
+    return array;
+}
+
 $("#btnSubmitOrder").on('click', function () {
     let order_id = $('#txtOrderID').val();
     let order_date = $('#txtDate').val();
     let customer_id = $('#orderCustomerID').val();
-    let item_code = $('#itemCodeCombo').val();
-    let order_qty = $('#txtQty').val();
-    let discount = $('#txtDiscount').val();
-    let total = $('#subtotal').val();
+    let customer_name = $('#selectCusName').val();
+    let customer_contact = $('#orderCustomerContact').val();
+    let cartObj = getItemDetails();
+
 
     let ob = {
         order_id: order_id,
         order_date: order_date,
         customer_id: customer_id,
-        discount: discount
+        customer_name:customer_name,
+        customer_contact:customer_contact,
+        fullObj:cartObj
     }
-
-    array.push({code:itCode,name:itName,price:Price,quantity:Quantity,total:total});
 
 
     $.ajax({
-        url: baseURL + "purchase",
+        url: baseURL + "purchace",
         method: "post",
         dataType: "json",
         data: JSON.stringify(ob),
@@ -219,19 +239,7 @@ $("#btnSubmitOrder").on('click', function () {
 
 });
 
-function getItemDetails() {
-    let rows = $("#orderTblBody").children().length;
-    var array = [];
-    for (let i = 0; i < rows; i++) {
-        let itCode = $("#orderTblBody").children().eq(i).children(":eq(0)").text();
-        let itName = $("#orderTblBody").children().eq(i).children(":eq(2)").text();
-        let Price = $("#orderTblBody").children().eq(i).children(":eq(3)").text();
-        let Quantity = $("#orderTblBody").children().eq(i).children(":eq(4)").text();
-        let total = $("#orderTblBody").children().eq(i).children(":eq(5)").text();
-        array.push({code:itCode,name:itName,price:Price,quantity:Quantity,total:total});
-    }
-    return array;
-}
+
 
 
 

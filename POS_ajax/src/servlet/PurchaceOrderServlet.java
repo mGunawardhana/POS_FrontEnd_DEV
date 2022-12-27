@@ -16,7 +16,7 @@ import java.sql.SQLException;
 /**
  * CopyWriteOwner - mr.Gunawardhana
  * Contact - 071 - 733 1792
- *
+ * <p>
  * © 2022 mGunawardhana,INC. ALL RIGHTS RESERVED.
  */
 
@@ -24,51 +24,68 @@ import java.sql.SQLException;
 public class PurchaceOrderServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("i m here 01");
+
+
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
-        String orderId = jsonObject.getString("orderId");
-        String iCode = jsonObject.getString("iCode");
-        String itemName = jsonObject.getString("itemName");
-        double price = Double.parseDouble(jsonObject.getString("price"));
-        int Qty = Integer.parseInt(jsonObject.getString("Qty"));
-        double total = Double.parseDouble(jsonObject.getString("total"));
+        String order_id = jsonObject.getString("order_id");
+        String order_date = jsonObject.getString("order_date");
+        String customer_id = jsonObject.getString("customer_id");
+        String customer_name = jsonObject.getString("customer_name");
+        String customer_contact = jsonObject.getString("customer_contact");
 
-        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
+
+        try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();){
+
+            System.out.println("i m here 02");
+
             connection.setAutoCommit(false);
-            PreparedStatement prepareStatement = connection.prepareStatement("insert into `orders` values (?,?,?,?,?,?)");
-            prepareStatement.setObject(1, orderId);
-            prepareStatement.setObject(2, iCode);
-            prepareStatement.setObject(3, itemName);
-            prepareStatement.setObject(4, price);
-            prepareStatement.setObject(5, Qty);
-            prepareStatement.setObject(6, total);
 
-            if (!(prepareStatement.executeUpdate() > 0)) {
+            PreparedStatement pstm = connection.prepareStatement("insert into `orders` values (?,?,?,?,?)");
+            pstm.setObject(1, order_id);
+            pstm.setObject(2, order_date);
+            pstm.setObject(3, customer_id);
+            pstm.setObject(4, customer_name);
+            pstm.setObject(5, customer_contact);
+
+            if (!(pstm.executeUpdate()>0)) {
+
+                System.out.println("i m here 03");
+
+
                 connection.rollback();
                 connection.setAutoCommit(true);
-            } else {
-                JsonArray orderDetails = jsonObject.getJsonArray("orderDetails");
+                throw new RuntimeException("Order Issue");
+            }else{
+
+                System.out.println("i m here 04");
+
+                JsonArray orderDetails = jsonObject.getJsonArray("fullObj");
                 for (JsonValue orderDetail : orderDetails) {
+                    System.out.println("i m here 06");
 
-                    String order_ID = orderDetail.asJsonObject().getString("orderId");
-                    String item_Code = orderDetail.asJsonObject().getString("iCode");
-                    String item_Name = orderDetail.asJsonObject().getString("itemName");
+                    String item_Code = orderDetail.asJsonObject().getString("code");
+                    String item_Name = orderDetail.asJsonObject().getString("name");
                     double Price = Double.parseDouble(orderDetail.asJsonObject().getString("price"));
-                    int quantity = Integer.parseInt(orderDetail.asJsonObject().getString("Qty"));
-                    double tot = Double.parseDouble(orderDetail.asJsonObject().getString("total"));
+                    int qty = Integer.parseInt(orderDetail.asJsonObject().getString("quantity"));
+                    double total = Double.parseDouble(orderDetail.asJsonObject().getString("total"));
 
-                    PreparedStatement pStatement = connection.prepareStatement("insert into `orders` values (?,?,?,?,?,?)");
+                    PreparedStatement pstms = connection.prepareStatement("insert into `OrderDetails` values(?,?,?,?,?,?)");
 
-                    pStatement.setObject(1,order_ID);
-                    pStatement.setObject(2,item_Code);
-                    pStatement.setObject(3,item_Name);
-                    pStatement.setObject(4,Price);
-                    pStatement.setObject(5,quantity);
-                    pStatement.setObject(6,tot);
+                    pstms.setObject(1, order_id);
+                    pstms.setObject(2, item_Code);
+                    pstms.setObject(3, item_Name);
+                    pstms.setObject(4, Price);
+                    pstms.setObject(5, qty);
+                    pstms.setObject(6, total);
 
-                    if (!(pStatement.executeUpdate()>0)) {
+                    if (!(pstms.executeUpdate()>0)) {
+                        System.out.println("i m here 07");
+
                         connection.rollback();
                         connection.setAutoCommit(true);
                         throw new RuntimeException("Order Details Issue");
@@ -77,23 +94,24 @@ public class PurchaceOrderServlet extends HttpServlet {
 
                 connection.commit();
                 connection.setAutoCommit(true);
-                JsonObjectBuilder rjo = Json.createObjectBuilder();
-                rjo.add("state", "Success");
-                rjo.add("message", "Order Success !");
-                rjo.add("data", "");
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().print(rjo.build());
+                System.out.println("i m here 08");
+
+                JsonObjectBuilder error = Json.createObjectBuilder();
+                error.add("state","Success");
+                error.add("message","Order Successfully Purchased..!");
+                error.add("data","");
+                resp.getWriter().print(error.build());
             }
 
         } catch (SQLException | RuntimeException e) {
-            JsonObjectBuilder rjo = Json.createObjectBuilder();
-            rjo.add("state", "Error");
-            rjo.add("message", e.getLocalizedMessage());
-            rjo.add("data", "");
+            System.out.println("i m here 09");
+
+            JsonObjectBuilder error = Json.createObjectBuilder();
+            error.add("state","Error");
+            error.add("message",e.getLocalizedMessage());//TODO check here ............
+            error.add("data","");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().print(rjo.build());
+            resp.getWriter().print(error.build());
         }
-
-
     }
 }

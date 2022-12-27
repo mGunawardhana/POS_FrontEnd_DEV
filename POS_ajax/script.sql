@@ -12,14 +12,14 @@ CREATE TABLE IF NOT EXISTS customer
     address VARCHAR(20),
     contact VARCHAR(12),
     CONSTRAINT PRIMARY KEY (id)
-    );
+);
 
 INSERT INTO customer
-VALUES ('C00-001', 'Sunimal', 'Galle', 071-9076652),
-       ('C00-002', 'Samarapala', 'Galle', 071-9073652),
-       ('C00-003', 'Kasun', 'Matara', 071-9023652),
-       ('C00-004', 'Rahul', 'Habanthota', 071-9665267),
-       ('C00-005', 'Amarathunga', 'Hapugala', 071-576652);
+VALUES ('C00-001', 'Sunimal', 'Galle', 071 - 9076652),
+       ('C00-002', 'Samarapala', 'Galle', 071 - 9073652),
+       ('C00-003', 'Kasun', 'Matara', 071 - 9023652),
+       ('C00-004', 'Rahul', 'Habanthota', 071 - 9665267),
+       ('C00-005', 'Amarathunga', 'Hapugala', 071 - 576652);
 
 
 DROP TABLE IF EXISTS item;
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS item
     qty       VARCHAR(20),
     unitPrice double DEFAULT 0.00,
     CONSTRAINT PRIMARY KEY (itemId)
-    );
+);
 
 INSERT INTO item
 VALUES ('I00-001', 'Kottu', 1000, 110.00),
@@ -44,16 +44,13 @@ VALUES ('I00-001', 'Kottu', 1000, 110.00),
 DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders`
 (
-    orderId  VARCHAR(10),
-    iCode    VARCHAR(10),
-    itemName VARCHAR(10),
-    price    double DEFAULT 0.00,
-    Qty      INT,
-    total    double,
+    order_id         VARCHAR(10),
+    order_date       DATE,
+    customer_id      VARCHAR(10),
+    customer_name    VARCHAR(20),
+    customer_contact VARCHAR(12)
+);
 
-    CONSTRAINT PRIMARY KEY (orderId, iCode),
-    CONSTRAINT FOREIGN KEY (iCode) REFERENCES customer (id) ON DELETE CASCADE ON UPDATE CASCADE
-    );
 SHOW TABLES;
 DESCRIBE `orders`;
 
@@ -61,18 +58,12 @@ DESCRIBE `orders`;
 DROP TABLE IF EXISTS `orderDetails`;
 CREATE TABLE IF NOT EXISTS `orderDetails`
 (
-    oID      VARCHAR(10),
-    iCode    VARCHAR(10),
-    date     DATE,
-    cID      VARCHAR(10),
-    oQty     double,
-    Tot      double,
-    discount double,
-
-    CONSTRAINT PRIMARY KEY (oID, iCode),
-    CONSTRAINT FOREIGN KEY (oID) REFERENCES `orders` (orderId) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (iCode) REFERENCES item (itemId) ON DELETE CASCADE ON UPDATE CASCADE
-
-    );
+    order_id VARCHAR(10),
+    code     VARCHAR(10),
+    name     VARCHAR(20),
+    price    double,
+    quantity int,
+    total    double
+);
 SHOW TABLES;
 DESCRIBE `orderDetails`;
