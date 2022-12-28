@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS customer
 );
 
 INSERT INTO customer
-VALUES ('C00-001', 'Sunimal', 'Galle', 071 - 9076652),
-       ('C00-002', 'Samarapala', 'Galle', 071 - 9073652),
-       ('C00-003', 'Kasun', 'Matara', 071 - 9023652),
-       ('C00-004', 'Rahul', 'Habanthota', 071 - 9665267),
-       ('C00-005', 'Amarathunga', 'Hapugala', 071 - 576652);
+VALUES ('C00-001', 'Sunimal', 'Galle', 071-9076652),
+       ('C00-002', 'Samarapala', 'Galle', 071-9073652),
+       ('C00-003', 'Kasun', 'Matara', 071-9023652),
+       ('C00-004', 'Rahul', 'Habanthota', 071-9665267),
+       ('C00-005', 'Amarathunga', 'Hapugala', 071-576652);
 
 
 DROP TABLE IF EXISTS item;
@@ -48,7 +48,8 @@ CREATE TABLE IF NOT EXISTS `orders`
     order_date       DATE,
     customer_id      VARCHAR(20),
     customer_name    VARCHAR(20),
-    customer_contact VARCHAR(15)
+    customer_contact VARCHAR(15),
+    CONSTRAINT PRIMARY KEY (order_id)
 );
 
 SHOW TABLES;
