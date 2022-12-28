@@ -119,6 +119,7 @@ public class PurchaceOrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String option = req.getParameter("option");
 
         switch (option) {
@@ -162,14 +163,17 @@ public class PurchaceOrderServlet extends HttpServlet {
 
                 try (Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()) {
 
+                    System.out.println("line 166");
 
                     PreparedStatement pstm2 = connection.prepareStatement("select * from `orderDetails`");
                     ResultSet resultSet2 = pstm2.executeQuery();
                     JsonArrayBuilder allOrdersDetails = Json.createArrayBuilder();
 
-                    System.out.println("I'm in second try catch now !");
+                    System.out.println("line 172");
 
                     while (resultSet2.next()) {
+
+                        System.out.println("line 176");
 
                         JsonObjectBuilder OrderDetails = Json.createObjectBuilder();
                         OrderDetails.add("order_id", resultSet2.getString("order_id"));
@@ -181,9 +185,13 @@ public class PurchaceOrderServlet extends HttpServlet {
 
                         allOrdersDetails.add(OrderDetails.build());
 
+                        System.out.println("I'm in second try catch now !");
+
+
                         System.out.println(OrderDetails.build().toString());
                     }
 
+                    System.out.println(" line 191 ");
                     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                     objectBuilder.add("state", "OK");
                     objectBuilder.add("message", "Successfully loaded ..!");
