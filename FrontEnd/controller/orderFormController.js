@@ -73,8 +73,8 @@ $('#orderCustomerID').on('click', function () {
             for (let customer of res.data) {
                 if (customer.id === customerID) {
                     $("#selectCusName").val(customer.name);
-                    $("#orderCustomerContact").val(customer.address);
-                    $("#orderCustomerAddress").val(customer.contact);
+                    $("#orderCustomerAddress").val(customer.address);
+                    $("#orderCustomerContact").val(customer.contact);
                 }
             }
         }
@@ -267,7 +267,7 @@ function refresh() {
 function loadAllOrder() {
     $("#tblOrder").empty();
     $.ajax({
-        url: baseURL + "purchace",
+        url: baseURL + "purchace?option=Order",
         success: function (res) {
             for (let c of res.data) {
 
@@ -299,14 +299,14 @@ function loadAllOrder() {
 function loadAllOrderDetails() {
     $("#tblOrderDetails").empty();
     $.ajax({
-        url: baseURL + "purchace",
+        url: baseURL + "purchace?option=OrderDetails",
         success: function (res) {
             for (let c of res.data) {
 
                 let order_id = c.order_id;// TODO check her but no discount detected ..................................
                 let code = c.item_code;
                 let name = c.item_name;
-                let price = c.item_name;
+                let price = c.item_price;
                 let quantity = c.item_quantity;
                 let total = c.item_total;
 
@@ -329,9 +329,4 @@ function loadAllOrderDetails() {
     });
 }
 
-//
-//
-//
-//
-//
 

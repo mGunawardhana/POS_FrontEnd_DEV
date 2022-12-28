@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS `orderDetails`;
 CREATE TABLE IF NOT EXISTS `orderDetails`
 (
     order_id VARCHAR(10),
-    code     VARCHAR(10),
+    item_code     VARCHAR(10),
     name     VARCHAR(20),
     price    double,
     quantity int,
